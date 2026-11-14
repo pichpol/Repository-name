@@ -3,16 +3,107 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:MyApp.ViewModels"
+             xmlns:data="using:MyApp.Data"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="MyApp.Views.MainView"
              x:DataType="vm:MainViewModel">
     <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainViewModel />
     </Design.DataContext>
 
-    <TextBox Text="{Binding Greeting}"
-             HorizontalAlignment="Center"
-             VerticalAlignment="Center" />
+    <TabControl Margin="8">
+
+        <!-- ЭКРАН 1: аренды -->
+        <TabItem Header="Аренды">
+            <DockPanel Margin="8">
+                <TextBlock DockPanel.Dock="Top" Text="Все аренды"
+                           FontSize="20" FontWeight="SemiBold" Margin="0,0,0,8" />
+                <ListBox x:Name="RentalsList">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate x:DataType="data:Rental">
+                            <StackPanel Spacing="2" Margin="0,4">
+                                <TextBlock Text="{Binding Client.FullName}" FontWeight="SemiBold" />
+                                <TextBlock Text="{Binding Item.Title}" />
+                                <TextBlock Text="{Binding StartDate, StringFormat='Выдано: {0:dd.MM.yyyy}'}" />
+                                <TextBlock Text="{Binding EndDate, StringFormat='Вернуть: {0:dd.MM.yyyy}'}" />
+                                <TextBlock Text="{Binding TotalCost, StringFormat='Стоимость: {0} руб.'}" />
+                                <TextBlock Text="Возвращено" Foreground="Green" IsVisible="{Binding IsReturned}" />
+                                <TextBlock Text="На руках" Foreground="OrangeRed" IsVisible="{Binding !IsReturned}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+        </TabItem>
+
+        <!-- ЭКРАН 2: клиенты -->
+        <TabItem Header="Клиенты">
+            <DockPanel Margin="8">
+                <TextBlock DockPanel.Dock="Top" Text="Клиенты"
+                           FontSize="20" FontWeight="SemiBold" Margin="0,0,0,8" />
+                <ListBox x:Name="ClientsList">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate x:DataType="data:Client">
+                            <StackPanel Spacing="2" Margin="0,4">
+                                <TextBlock Text="{Binding FullName}" FontWeight="SemiBold" />
+                                <TextBlock Text="{Binding PhoneNumber}" />
+                                <TextBlock Text="{Binding LoyaltyPoints, StringFormat='Бонусные баллы: {0}'}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+        </TabItem>
+
+        <!-- ЭКРАН 3: предметы проката -->
+        <TabItem Header="Прокат">
+            <DockPanel Margin="8">
+                <TextBlock DockPanel.Dock="Top" Text="Фототехника и настольные игры"
+                           FontSize="20" FontWeight="SemiBold" Margin="0,0,0,8" />
+                <ListBox x:Name="ItemsList">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate x:DataType="data:Item">
+                            <StackPanel Spacing="2" Margin="0,4">
+                                <TextBlock Text="{Binding Title}" FontWeight="SemiBold" />
+                                <TextBlock Text="{Binding Category}" />
+                                <TextBlock Text="{Binding PricePerDay, StringFormat='{}{0} руб./сутки'}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+        </TabItem>
+
+        <!-- ЭКРАН 4: карточка клиента со всеми его арендами -->
+        <TabItem Header="Карточки клиентов">
+            <DockPanel Margin="8">
+                <TextBlock DockPanel.Dock="Top" Text="Клиент и его аренды"
+                           FontSize="20" FontWeight="SemiBold" Margin="0,0,0,8" />
+                <ListBox x:Name="ClientCardsList">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate x:DataType="data:Client">
+                            <StackPanel Spacing="4" Margin="0,8">
+                                <TextBlock Text="{Binding FullName}" FontSize="16" FontWeight="SemiBold" />
+                                <TextBlock Text="{Binding PhoneNumber}" />
+                                <TextBlock Text="Аренды:" FontWeight="SemiBold" />
+                                <ListBox ItemsSource="{Binding Rentals}">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate x:DataType="data:Rental">
+                                            <StackPanel Spacing="1" Margin="0,2">
+                                                <TextBlock Text="{Binding Item.Title}" />
+                                                <TextBlock Text="{Binding StartDate, StringFormat='Выдано: {0:dd.MM.yyyy}'}" />
+                                                <TextBlock Text="{Binding EndDate, StringFormat='Вернуть: {0:dd.MM.yyyy}'}" />
+                                                <TextBlock Text="{Binding TotalCost, StringFormat='{}{0} руб.'}" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+        </TabItem>
+
+    </TabControl>
 </UserControl>
