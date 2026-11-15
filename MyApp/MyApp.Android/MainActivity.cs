@@ -6,7 +6,7 @@ using Avalonia.Android;
 namespace MyApp.Android;
 
 [Activity(
-    Label = "MyApp.Android",
+    Label = "Крутой_прокат228",
     Theme = "@style/MyTheme.NoActionBar",
     Icon = "@drawable/icon",
     MainLauncher = true,
