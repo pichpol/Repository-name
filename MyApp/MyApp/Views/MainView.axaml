@@ -13,12 +13,65 @@
 
     <TabControl Margin="8">
 
-        <!-- ЭКРАН 1: аренды -->
+        <!--Аренды-->
         <TabItem Header="Аренды">
-            <DockPanel Margin="8">
-                <TextBlock DockPanel.Dock="Top" Text="Все аренды"
+            <Grid RowDefinitions="Auto,Auto,Auto,Auto,*" Margin="8">
+
+                <TextBlock Grid.Row="0" Text="Аренды"
                            FontSize="20" FontWeight="SemiBold" Margin="0,0,0,8" />
-                <ListBox x:Name="RentalsList">
+
+                <WrapPanel Grid.Row="1" Orientation="Horizontal">
+                    <StackPanel Margin="0,0,12,8">
+                        <TextBlock Text="Клиент" />
+                        <ComboBox x:Name="ClientCombo" Width="200" PlaceholderText="Выберите клиента">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate x:DataType="data:Client">
+                                    <TextBlock Text="{Binding FullName}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <StackPanel Margin="0,0,12,8">
+                        <TextBlock Text="Предмет" />
+                        <ComboBox x:Name="ItemCombo" Width="200" PlaceholderText="Выберите предмет">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate x:DataType="data:Item">
+                                    <TextBlock Text="{Binding Title}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <StackPanel Margin="0,0,12,8">
+                        <TextBlock Text="Дата выдачи" />
+                        <CalendarDatePicker x:Name="StartPicker" Width="180" />
+                    </StackPanel>
+
+                    <StackPanel Margin="0,0,12,8">
+                        <TextBlock Text="Дата возврата" />
+                        <CalendarDatePicker x:Name="EndPicker" Width="180" />
+                    </StackPanel>
+
+                    <StackPanel Margin="0,0,12,8">
+                        <TextBlock Text="Стоимость, руб." />
+                        <TextBox x:Name="CostBox" Width="120" />
+                    </StackPanel>
+
+                    <StackPanel Margin="0,0,12,8" VerticalAlignment="Bottom">
+                        <CheckBox x:Name="ReturnedBox" Content="Возвращено" />
+                    </StackPanel>
+                </WrapPanel>
+
+                <WrapPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,4">
+                    <Button Content="Добавить" Click="AddRental_Click" Margin="0,0,8,0" />
+                    <Button Content="Удалить" Click="DeleteRental_Click" />
+                </WrapPanel>
+
+                <TextBlock Grid.Row="3" x:Name="RentalsMessage" Foreground="DarkRed"
+                           TextWrapping="Wrap" Margin="0,4,0,8" />
+
+                <ListBox Grid.Row="4" x:Name="RentalsList">
                     <ListBox.ItemTemplate>
                         <DataTemplate x:DataType="data:Rental">
                             <StackPanel Spacing="2" Margin="0,4">
@@ -27,21 +80,52 @@
                                 <TextBlock Text="{Binding StartDate, StringFormat='Выдано: {0:dd.MM.yyyy}'}" />
                                 <TextBlock Text="{Binding EndDate, StringFormat='Вернуть: {0:dd.MM.yyyy}'}" />
                                 <TextBlock Text="{Binding TotalCost, StringFormat='Стоимость: {0} руб.'}" />
-                                <TextBlock Text="Возвращено" Foreground="Green" IsVisible="{Binding IsReturned}" />
-                                <TextBlock Text="На руках" Foreground="OrangeRed" IsVisible="{Binding !IsReturned}" />
+                                <TextBlock Text="Возвращено" Foreground="Green"
+                                           IsVisible="{Binding IsReturned}" />
+                                <TextBlock Text="На руках" Foreground="OrangeRed"
+                                           IsVisible="{Binding !IsReturned}" />
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-            </DockPanel>
+            </Grid>
         </TabItem>
 
-        <!-- ЭКРАН 2: клиенты -->
+        <!--клиенты-->
         <TabItem Header="Клиенты">
-            <DockPanel Margin="8">
-                <TextBlock DockPanel.Dock="Top" Text="Клиенты"
+            <Grid RowDefinitions="Auto,Auto,Auto,Auto,*" Margin="8">
+
+                <TextBlock Grid.Row="0" Text="Клиенты"
                            FontSize="20" FontWeight="SemiBold" Margin="0,0,0,8" />
-                <ListBox x:Name="ClientsList">
+
+                <WrapPanel Grid.Row="1" Orientation="Horizontal">
+                    <StackPanel Margin="0,0,12,8">
+                        <TextBlock Text="ФИО" />
+                        <TextBox x:Name="FullNameBox" Width="200" />
+                    </StackPanel>
+
+                    <StackPanel Margin="0,0,12,8">
+                        <TextBlock Text="Телефон" />
+                        <TextBox x:Name="PhoneBox" Width="160" />
+                    </StackPanel>
+
+                    <StackPanel Margin="0,0,12,8">
+                        <TextBlock Text="Бонусные баллы" />
+                        <TextBox x:Name="PointsBox" Width="120" />
+                    </StackPanel>
+                </WrapPanel>
+
+                <WrapPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,4">
+                    <Button Content="Добавить" Click="AddClient_Click" Margin="0,0,8,0" />
+                    <Button Content="Сохранить" Click="SaveClient_Click" Margin="0,0,8,0" />
+                    <Button Content="Удалить" Click="DeleteClient_Click" />
+                </WrapPanel>
+
+                <TextBlock Grid.Row="3" x:Name="ClientsMessage" Foreground="DarkRed"
+                           TextWrapping="Wrap" Margin="0,4,0,8" />
+
+                <ListBox Grid.Row="4" x:Name="ClientsList"
+                         SelectionChanged="ClientsList_SelectionChanged">
                     <ListBox.ItemTemplate>
                         <DataTemplate x:DataType="data:Client">
                             <StackPanel Spacing="2" Margin="0,4">
@@ -52,15 +136,42 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-            </DockPanel>
+            </Grid>
         </TabItem>
 
-        <!-- ЭКРАН 3: предметы проката -->
+        <!--прокат-->
         <TabItem Header="Прокат">
-            <DockPanel Margin="8">
-                <TextBlock DockPanel.Dock="Top" Text="Фототехника и настольные игры"
+            <Grid RowDefinitions="Auto,Auto,Auto,Auto,*" Margin="8">
+
+                <TextBlock Grid.Row="0" Text="Фототехника и настольные игры"
                            FontSize="20" FontWeight="SemiBold" Margin="0,0,0,8" />
-                <ListBox x:Name="ItemsList">
+
+                <WrapPanel Grid.Row="1" Orientation="Horizontal">
+                    <StackPanel Margin="0,0,12,8">
+                        <TextBlock Text="Название" />
+                        <TextBox x:Name="TitleBox" Width="220" />
+                    </StackPanel>
+
+                    <StackPanel Margin="0,0,12,8">
+                        <TextBlock Text="Категория" />
+                        <TextBox x:Name="CategoryBox" Width="140" />
+                    </StackPanel>
+
+                    <StackPanel Margin="0,0,12,8">
+                        <TextBlock Text="Цена за сутки, руб." />
+                        <TextBox x:Name="PriceBox" Width="120" />
+                    </StackPanel>
+                </WrapPanel>
+
+                <WrapPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,4">
+                    <Button Content="Добавить" Click="AddItem_Click" Margin="0,0,8,0" />
+                    <Button Content="Удалить" Click="DeleteItem_Click" />
+                </WrapPanel>
+
+                <TextBlock Grid.Row="3" x:Name="ItemsMessage" Foreground="DarkRed"
+                           TextWrapping="Wrap" Margin="0,4,0,8" />
+
+                <ListBox Grid.Row="4" x:Name="ItemsList">
                     <ListBox.ItemTemplate>
                         <DataTemplate x:DataType="data:Item">
                             <StackPanel Spacing="2" Margin="0,4">
@@ -71,14 +182,16 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-            </DockPanel>
+            </Grid>
         </TabItem>
 
-        <!-- ЭКРАН 4: карточка клиента со всеми его арендами -->
+        <!--Карточки клиентов -->
         <TabItem Header="Карточки клиентов">
             <DockPanel Margin="8">
-                <TextBlock DockPanel.Dock="Top" Text="Клиент и его аренды"
-                           FontSize="20" FontWeight="SemiBold" Margin="0,0,0,8" />
+                <TextBlock DockPanel.Dock="Top"
+                           Text="Клиент и его аренды"
+                           FontSize="20" FontWeight="SemiBold"
+                           Margin="0,0,0,8" />
                 <ListBox x:Name="ClientCardsList">
                     <ListBox.ItemTemplate>
                         <DataTemplate x:DataType="data:Client">
